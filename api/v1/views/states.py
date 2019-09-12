@@ -22,9 +22,9 @@ def get_states():
 @app_views.route("/states/<state_id>", methods=["GET"])
 def get_state(state_id):
     """
-    Retrieves a State object
+    Retrieves a State object by id
     """
     state = storage.get("State", state_id)
     if state:
-        return jsonify(state)
+        return jsonify(state.to_dict())
     abort(404)
