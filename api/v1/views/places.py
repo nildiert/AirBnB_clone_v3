@@ -3,6 +3,7 @@
 Places file
 """
 
+
 import models
 from models import storage
 from flask import abort, jsonify, request
@@ -52,4 +53,47 @@ def get_places(city_id):
         for place in city.places:
             places.append(place.to_dict())
         return jsonify(places)
+    abort(404)
+
+
+@app_views.route('places/<place_id>', methods=['PUT'])
+def update_places(place_id):
+    """
+    Update a Place instance
+    """
+    if not request.json:
+        abort(400, "Not a JSON")
+    place = storage.get("Place", place_id)
+    if place:
+        if 'name' in request.json.keys():
+            place.name = request.json['name']
+        if 'description' in request.json.keys():
+            place.description = request.json['description']
+        if 'number_rooms' in request.json.keys():
+            place.number_rooms = request.json['number_rooms']
+        if 'number_bathrooms' in request.json.keys():
+            place.number_bathrooms = request.json['number_bathrooms']
+        if 'max_guest' in request.json.keys():
+            place.max_guest = request.json['max_guest']
+        if 'price_by_night' in request.json.keys():
+            place.price_by_night = request.json['price_by_night']
+        if 'latitude' in request.json.keys():
+            place.latitude = request.json['latitude']
+        if 'longitude' in request.json.keys():
+            place.longitude = request.json['longitude']
+        place.save()
+        return jsonify(place.to_dict()), 200
+    abort(404)
+
+
+@app_views.route('places/<place_id>', methods=['DELETE'])
+def delete_place(place_id):
+    """
+    Delete a Place instance
+    """
+    place = storage.get("Place", place_id)
+    if place:
+        storage.delete(place)
+        storage.save()
+        return jsonify({}), 200
     abort(404)
