@@ -29,6 +29,7 @@ def create_place(city_id):
         return jsonify(place.to_dict()), 201
     abort(404)
 
+
 @app_views.route('places/<place_id>')
 def get_place(place_id):
     """

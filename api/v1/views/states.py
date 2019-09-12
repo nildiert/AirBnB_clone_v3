@@ -29,6 +29,7 @@ def get_state(state_id):
         return jsonify(state.to_dict())
     abort(404)
 
+
 @app_views.route("/states", methods=['POST'])
 def create_state():
     """
@@ -41,6 +42,7 @@ def create_state():
     state = models.state.State(name=request.json['name'])
     state.save()
     return jsonify(state.to_dict()), 201
+
 
 @app_views.route("/states/<state_id>", methods=['PUT'])
 def update_state(state_id):
@@ -55,6 +57,7 @@ def update_state(state_id):
         state.save()
         return jsonify(state.to_dict()), 200
     abort(404)
+
 
 @app_views.route("/states/<state_id>", methods=['DELETE'])
 def delete_state(state_id):

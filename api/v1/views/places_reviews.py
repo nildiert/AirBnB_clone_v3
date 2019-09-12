@@ -9,10 +9,10 @@ from flask import abort, jsonify, request
 from api.v1.views import app_views
 
 
-@app_views.route('cities/<city_id>/places', methods=['POST'])
-def create_place(city_id):
+@app_views.route('places/<place_id>/reviews', methods=['POST'])
+def create_review(place_id):
     """
-    Create and returns a new a new place with the status code 201
+    Create and returns a new a new review with the status code 201
     """
     if not request.json:
         abort(400, "Not a JSON")
@@ -20,30 +20,31 @@ def create_place(city_id):
         abort(400, "Missing user_id")
     if 'name' not in request.json:
         abort(400, "Missing name")
-    city = storage.get("City", city_id)
+    place = storage.get("Place", place_id)
     user = storage.get("User", id=request.json['user_id'])
-    if city and user:
-        request.json['city_id'] = city_id
-        place = models.place.Place(**request.json)
-        place.save()
-        return jsonify(place.to_dict()), 201
+    if place and user:
+        request.json['place_id'] = place_id
+        review = models.review.Place(**request.json)
+        review.save()
+        return jsonify(review.to_dict()), 201
     abort(404)
 
+
 @app_views.route('reviews/<review_id>')
-def get_place(place_id):
+def get_review(review_id):
     """
-    Retrieve a Place object by id
+    Retrieves a Review object by id
     """
-    place = storage.get("Place", place_id)
-    if place:
-        return jsonify(place.to_dict())
+    review = storage.get("Review", review_id)
+    if review:
+        return jsonify(review.to_dict())
     abort(404)
 
 
 @app_views.route('places/<place_id>/reviews')
 def get_reviews(place_id):
     """
-    Retrieves the list of all Place objects of city
+    Retrieves the list of all Review objects of a Place
     """
     reviews = []
     place = storage.get("Place", place_id)
@@ -51,4 +52,17 @@ def get_reviews(place_id):
         for review in place.reviews:
             reviews.append(review.to_dict())
         return jsonify(reviews)
+    abort(404)
+
+
+@app_views.route("/reviews/<review_id>", methods=['DELETE'])
+def delete_review(review_id):
+    """
+    Delete a State instance
+    """
+    review = storage.get("Review", id=review_id)
+    if review:
+        storage.delete(review)
+        storage.save()
+        return jsonify({}), 200
     abort(404)
