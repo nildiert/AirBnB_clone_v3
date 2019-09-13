@@ -37,7 +37,7 @@ def create_state():
     """
     if not request.json:
         abort(400, "Not a JSON")
-    if not 'name' in request.json:
+    if 'name' not in request.json:
         abort(400, "Missing name")
     state = models.state.State(name=request.json['name'])
     state.save()
