@@ -11,7 +11,7 @@ from os import getenv
 
 
 @app_views.route('places/<place_id>/amenities')
-def get_amenities(place_id):
+def get_amenities_on_place(place_id):
     """
     Retrieves the list of all Amenity objects of a Place
     """
