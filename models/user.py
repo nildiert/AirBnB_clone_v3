@@ -33,4 +33,3 @@ class User(BaseModel, Base):
         super().__init__(*args, **kwargs)
         pass_encode = self.password.encode()
         self.password = hashlib.md5(pass_encode).hexdigest()
-
